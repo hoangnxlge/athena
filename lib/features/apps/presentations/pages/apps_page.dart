@@ -389,8 +389,12 @@ class _AppsPageState extends State<AppsPage>
                               ActionButton(
                                   event: AppsEvent.getSoftwareVersion()),
                               ActionButton(
+                                event: AppsEvent.switchAudioGuidance(true),
+                                title: 'Audio guidance on',
+                              ),
+                              ActionButton(
                                 event: AppsEvent.switchAudioGuidance(false),
-                                title: 'Turn off audio guidance',
+                                title: 'Audio guidance off',
                               ),
                             ],
                           ),
