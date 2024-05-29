@@ -57,10 +57,14 @@ class _AppsPageState extends State<AppsPage>
   final mapAppIds = {
     'Home': 'com.webos.app.home',
     'Hdmi 1': 'com.webos.app.hdmi1',
+    'Hdmi 2': 'com.webos.app.hdmi2',
+    'Hdmi 3': 'com.webos.app.hdmi3',
+    'Hdmi 4': 'com.webos.app.hdmi4',
     'Lg Channels': 'com.webos.app.lgchannels',
     'Live TV': 'com.webos.app.livetv',
     'Channel Manager': 'com.webos.app.channeledit',
     'Channel Tunning': 'com.webos.app.channelsetting',
+    'Socket': 'com.app.ls2bridge',
   };
   @override
   void initState() {
@@ -389,8 +393,12 @@ class _AppsPageState extends State<AppsPage>
                               ActionButton(
                                   event: AppsEvent.getSoftwareVersion()),
                               ActionButton(
+                                event: AppsEvent.switchAudioGuidance(true),
+                                title: 'Audio guidance on',
+                              ),
+                              ActionButton(
                                 event: AppsEvent.switchAudioGuidance(false),
-                                title: 'Turn off audio guidance',
+                                title: 'Audio guidance off',
                               ),
                             ],
                           ),

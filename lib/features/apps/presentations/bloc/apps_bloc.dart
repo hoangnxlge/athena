@@ -61,6 +61,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_ActivateDevMode>(_onActivateDevMode);
     on<_ReloadHomeApp>(_onReloadHomeApp);
     on<_OpenSocketApp>(_onOpenSocketApp);
+    on<_OpenNewSocketApp>(_onOpenNewSocketApp);
     on<_FactoryReset>(_onFactoryReset);
     on<_RebootDevice>(_onRebootDevice);
     on<_ChangeLanguage>(_onChangeLanguage);
@@ -203,6 +204,17 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
       await callLunaApi(
         'luna://com.webos.service.applicationmanager/launch',
         param: '{"id":"com.webos.app.home"}',
+      );
+    });
+  }
+
+
+  Future<void> _onOpenNewSocketApp(
+      _OpenNewSocketApp event, Emitter<AppsState> emit) async {
+    await safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.service.applicationmanager/launch',
+        param: '{"id":"com.app.ls2bridge"}',
       );
     });
   }

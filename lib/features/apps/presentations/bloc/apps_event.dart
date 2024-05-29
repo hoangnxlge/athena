@@ -27,6 +27,7 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.activateDevMode() = _ActivateDevMode;
   const factory AppsEvent.reloadHomeApp() = _ReloadHomeApp;
   const factory AppsEvent.launchSocketApp() = _OpenSocketApp;
+  const factory AppsEvent.launchNewSocketApp() = _OpenNewSocketApp;
   const factory AppsEvent.factoryReset() = _FactoryReset;
   const factory AppsEvent.rebootDevice() = _RebootDevice;
   const factory AppsEvent.sendKey(RemoteKey remoteKey) = _SendKey;
