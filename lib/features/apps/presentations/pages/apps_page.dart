@@ -80,7 +80,7 @@ class _AppsPageState extends State<AppsPage>
     super.dispose();
   }
 
-  final keyMaps = {
+  late final Map<SingleActivator, VoidCallback> keyMaps = {
     LogicalKeyboardKey.keyK: RemoteKey.up,
     LogicalKeyboardKey.keyJ: RemoteKey.down,
     LogicalKeyboardKey.keyH: RemoteKey.left,
@@ -90,20 +90,35 @@ class _AppsPageState extends State<AppsPage>
     LogicalKeyboardKey.escape: RemoteKey.exit,
     LogicalKeyboardKey.f1: RemoteKey.home,
     LogicalKeyboardKey.keyM: RemoteKey.menu,
-  };
+  }.map(
+    (key, value) => MapEntry(
+      SingleActivator(key),
+      () => bloc.add(AppsEvent.sendKey(value)),
+    ),
+  );
+  late final Map<SingleActivator, VoidCallback> appShortcuts = {
+    LogicalKeyboardKey.digit1: 'com.webos.app.hdmi1',
+    LogicalKeyboardKey.digit2: 'com.webos.app.hdmi2',
+    LogicalKeyboardKey.digit3: 'com.webos.app.hdmi3',
+    LogicalKeyboardKey.digit4: 'com.webos.app.hdmi4',
+    LogicalKeyboardKey.digit5: 'com.webos.app.livetv',
+    LogicalKeyboardKey.digit6: 'com.webos.app.lgchannels',
+  }.map(
+    (key, value) => MapEntry(
+      SingleActivator(key),
+      () {
+        bloc.add(
+          AppsEvent.launchApp(value),
+        );
+      },
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return CallbackShortcuts(
-      bindings: keyMaps.map(
-        (key, value) => MapEntry(
-          SingleActivator(key),
-          () {
-            bloc.add(AppsEvent.sendKey(value));
-          },
-        ),
-      ),
+      bindings: {...keyMaps, ...appShortcuts},
       child: FocusScope(
         autofocus: true,
         child: Padding(

@@ -197,17 +197,9 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
   Future<void> _onReloadHomeApp(
       _ReloadHomeApp event, Emitter<AppsState> emit) async {
     await safeCall(() async {
-      await callLunaApi(
-        'luna://com.webos.service.applicationmanager/closeByAppId',
-        param: '{"id":"com.webos.app.home"}',
-      );
-      await callLunaApi(
-        'luna://com.webos.service.applicationmanager/launch',
-        param: '{"id":"com.webos.app.home"}',
-      );
+      await sendShellCommand('kill \$(pgrep flutter-client)');
     });
   }
-
 
   Future<void> _onOpenNewSocketApp(
       _OpenNewSocketApp event, Emitter<AppsState> emit) async {
