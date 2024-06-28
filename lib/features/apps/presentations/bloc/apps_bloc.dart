@@ -66,13 +66,13 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_RebootDevice>(_onRebootDevice);
     on<_ChangeLanguage>(_onChangeLanguage);
     on<_SendKey>(_onSendKey);
-    on<_ChangeCountryCode>(_onChangeCountryCode);
+    on<_ChangeServiceCountry>(_onChangeCountryCode);
     on<_GetForegroundAppName>(_onGetForegroundAppname);
     on<_CaptureScreen>(_onCaptureScreen);
     on<_ChangeTVMode>(_onChangeTVMode);
     on<_AcceptUserAgreements>(_onAcceptUserAgreements);
     on<_TurnOnScreenSaver>(_onTurnOnScreenSaver);
-    on<_UpdateDNS>(_onUpdateDNS);
+    on<_ChangeDNS>(_onChangeDNS);
     on<_GetSoftwareVersion>(_onGetSoftwareVersion);
     on<_SwitchAudioGuidance>(_onSwitchAudioGuidance);
     on<_ChangeCountry>(_onChangeCountry);
@@ -288,7 +288,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
   }
 
   Future<void> _onChangeCountryCode(
-      _ChangeCountryCode event, Emitter<AppsState> emit) async {
+      _ChangeServiceCountry event, Emitter<AppsState> emit) async {
     final countryData = event.countryData;
     await safeCall(
       () async {
@@ -384,11 +384,11 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     });
   }
 
-  Future<void> _onUpdateDNS(_UpdateDNS event, Emitter<AppsState> emit) async {
+  Future<void> _onChangeDNS(_ChangeDNS event, Emitter<AppsState> emit) async {
     await safeCall(() async {
       await callLunaApi(
         'palm://com.palm.connectionmanager/setdns',
-        param: '{"dns":["192.168.0.1"]}',
+        param: '{"dns":["${event.dns}"]}',
       );
     });
   }

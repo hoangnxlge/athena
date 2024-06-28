@@ -404,7 +404,14 @@ class _AppsPageState extends State<AppsPage>
                               ),
                               ActionButton(
                                   event: AppsEvent.turnOnScreenSaver()),
-                              ActionButton(event: AppsEvent.updateDNS()),
+                              ActionButton(
+                                title: 'Network on',
+                                event: AppsEvent.changeDNS('192.168.0.1'),
+                              ),
+                              ActionButton(
+                                title: 'Network off',
+                                event: AppsEvent.changeDNS('127.0.0.0'),
+                              ),
                               ActionButton(
                                   event: AppsEvent.getSoftwareVersion()),
                               ActionButton(

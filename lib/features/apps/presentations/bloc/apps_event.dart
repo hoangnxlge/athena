@@ -32,7 +32,7 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.rebootDevice() = _RebootDevice;
   const factory AppsEvent.sendKey(RemoteKey remoteKey) = _SendKey;
   const factory AppsEvent.changeServiceCountry(CountryData countryData) =
-      _ChangeCountryCode;
+      _ChangeServiceCountry;
   const factory AppsEvent.changeLanguage(
 
       /// example: en-GB ko-KG ar-SA
@@ -42,7 +42,7 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.changeTVMode(TVMode mode) = _ChangeTVMode;
   const factory AppsEvent.acceptUserAgrements() = _AcceptUserAgreements;
   const factory AppsEvent.turnOnScreenSaver() = _TurnOnScreenSaver;
-  const factory AppsEvent.updateDNS() = _UpdateDNS;
+  const factory AppsEvent.changeDNS(String dns) = _ChangeDNS;
   const factory AppsEvent.getSoftwareVersion() = _GetSoftwareVersion;
   const factory AppsEvent.switchAudioGuidance(bool turnOn) =
       _SwitchAudioGuidance;
