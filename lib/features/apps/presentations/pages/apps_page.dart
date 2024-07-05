@@ -61,6 +61,7 @@ class _AppsPageState extends State<AppsPage>
     'Live TV': 'com.webos.app.livetv',
     'Channel Manager': 'com.webos.app.channeledit',
     'Channel Tunning': 'com.webos.app.channelsetting',
+    'Socket': 'com.app.ls2bridge',
   };
   @override
   void initState() {
@@ -281,6 +282,24 @@ class _AppsPageState extends State<AppsPage>
                     Expanded(
                       child: ListView(
                         children: [
+                          const Section(title: 'Ads', children: [
+                            ActionButton(
+                              event: AppsEvent.promotionOn(),
+                              title: 'Turn on Promotion',
+                            ),
+                            ActionButton(
+                              event: AppsEvent.promotionOff(),
+                              title: 'Turn off Promotion',
+                            ),
+                            ActionButton(
+                              event: AppsEvent.recommendOn(),
+                              title: 'Turn on Recommendation',
+                            ),
+                            ActionButton(
+                              event: AppsEvent.recommendOff(),
+                              title: 'Turn off Recommendation',
+                            ),
+                          ]),
                           Section(
                             title: 'Input Apps',
                             children: mapAppIds.entries

@@ -27,7 +27,18 @@ enum CountryData {
     code3: 'GBR',
     countryName: 'United Kingdom',
   ),
-  kr(countryCode: '18048', code2: 'KR', code3: 'KOR', countryName: 'Korean');
+  kr(
+    countryCode: '18048',
+    code2: 'KR',
+    code3: 'KOR',
+    countryName: 'Korean',
+  ),
+  other(
+    countryCode: '3122',
+    code2: 'EU7',
+    code3: 'EU7',
+    countryName: 'Other',
+  );
 
   const CountryData({
     required this.countryCode,
@@ -76,6 +87,10 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_GetSoftwareVersion>(_onGetSoftwareVersion);
     on<_SwitchAudioGuidance>(_onSwitchAudioGuidance);
     on<_ChangeCountry>(_onChangeCountry);
+    on<_RecommendOn>(_onRecommend);
+    on<_RecommendOff>(_offRecommend);
+    on<_PromotionOn>(_onPromotion);
+    on<_PromotionOff>(_offPromotion);
   }
 
   Future<void> safeCall(AsyncCallback function,
@@ -207,7 +222,6 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
       );
     });
   }
-
 
   Future<void> _onOpenNewSocketApp(
       _OpenNewSocketApp event, Emitter<AppsState> emit) async {
@@ -432,6 +446,48 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
         'luna://com.webos.settingsservice/setSystemSettings',
         param:
             '{"category" :"option", "settings":{"country":"${event.country.code3}"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _onRecommend(
+      _RecommendOn event, Emitter<AppsState> emit) async {
+    await safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param:
+            '{"category":"other", "settings":{"contentRecommendation": "on"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _offRecommend(
+      _RecommendOff event, Emitter<AppsState> emit) async {
+    await safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param:
+            '{"category":"other", "settings":{"contentRecommendation": "off"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _onPromotion(
+      _PromotionOn event, Emitter<AppsState> emit) async {
+    await safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param: '{"category":"general", "settings":{"homePromotion":"on"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _offPromotion(
+      _PromotionOff event, Emitter<AppsState> emit) async {
+    await safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param: '{"category":"general", "settings":{"homePromotion":"off"}}',
       );
     });
   }
