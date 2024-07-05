@@ -47,4 +47,8 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.switchAudioGuidance(bool turnOn) =
       _SwitchAudioGuidance;
   const factory AppsEvent.changeCountry(CountryData country) = _ChangeCountry;
+  const factory AppsEvent.promotionOn() = _PromotionOn;
+  const factory AppsEvent.promotionOff() = _PromotionOff;
+  const factory AppsEvent.recommendOn() = _RecommendOn;
+  const factory AppsEvent.recommendOff() = _RecommendOff;
 }
