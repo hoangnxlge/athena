@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:athena/features/apps/presentations/pages/apps_page.dart';
 import 'package:athena/features/luna_api/presentaion/luna_api_page.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,7 @@ class _BasePageState extends State<BasePage> {
     return CallbackShortcuts(
       bindings: {
         const SingleActivator(LogicalKeyboardKey.keyS): () =>
-            print('AppLog: search'),
+            log('AppLog: search'),
       },
       child: Scaffold(
         appBar: AppBar(),

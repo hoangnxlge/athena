@@ -16,9 +16,9 @@ abstract class LoadingDialog {
     await showDialog(
       context: _context,
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () => Future.value(false),
-        child: const AlertDialog(
+      builder: (context) => const PopScope(
+        canPop: false,
+        child: AlertDialog(
             content: Row(
           children: [
             CircularProgressIndicator(),
