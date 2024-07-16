@@ -4,6 +4,8 @@ import 'package:athena/features/apps/presentations/shared/widgets/app_card.dart'
 import 'package:athena/features/apps/presentations/shared/widgets/section.dart';
 import 'package:athena/features/apps/presentations/shared/widgets/section_title.dart';
 import 'package:athena/shared/widgets/app_snack_bar.dart';
+import 'package:athena/shared/widgets/edit_text_widget.dart';
+import 'package:athena/shared/widgets/launch_by_id_widget.dart';
 import 'package:athena/shared/widgets/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,9 +54,11 @@ class AppsPage extends StatefulWidget {
 
 class _AppsPageState extends State<AppsPage>
     with AutomaticKeepAliveClientMixin {
-  late final bloc = context.read<AppsBloc>();
-  final appIdController = TextEditingController();
-  final mapAppIds = {
+  late final _bloc = context.read<AppsBloc>();
+  final _appIdController = TextEditingController();
+  String _customVoice = 'Select Home Hub';
+  String _languageVoice = 'en-GB';
+  final _mapAppIds = {
     'Home': 'com.webos.app.home',
     'Hdmi 1': 'com.webos.app.hdmi1',
     'Hdmi 2': 'com.webos.app.hdmi2',
@@ -66,9 +70,31 @@ class _AppsPageState extends State<AppsPage>
     'Channel Tunning': 'com.webos.app.channelsetting',
     'Socket': 'com.app.ls2bridge',
   };
+  final _move = [
+    'Left',
+    'Right',
+    'Bottom',
+    'Top',
+    'Up',
+    'Down',
+  ];
+  final _scroll = [
+    'up',
+    'down',
+    'top',
+    'bottom',
+    'left',
+    'right',
+    'leftmost',
+    'rightmost',
+    'next',
+    'previous',
+    'first',
+    'last',
+  ];
   @override
   void initState() {
-    bloc
+    _bloc
       ..add(const AppsEvent.getDeviceList())
       ..add(const AppsEvent.captureScreen());
     super.initState();
@@ -76,7 +102,7 @@ class _AppsPageState extends State<AppsPage>
 
   @override
   void dispose() {
-    appIdController.dispose();
+    _appIdController.dispose();
     super.dispose();
   }
 
@@ -93,7 +119,7 @@ class _AppsPageState extends State<AppsPage>
   }.map(
     (key, value) => MapEntry(
       SingleActivator(key),
-      () => bloc.add(AppsEvent.sendKey(value)),
+      () => _bloc.add(AppsEvent.sendKey(value)),
     ),
   );
   late final Map<SingleActivator, VoidCallback> appShortcuts = {
@@ -107,7 +133,7 @@ class _AppsPageState extends State<AppsPage>
     (key, value) => MapEntry(
       SingleActivator(key),
       () {
-        bloc.add(
+        _bloc.add(
           AppsEvent.launchApp(value),
         );
       },
@@ -137,7 +163,7 @@ class _AppsPageState extends State<AppsPage>
                         children: [
                           IconButton(
                             onPressed: () {
-                              bloc.add(const AppsEvent.getDeviceList());
+                              _bloc.add(const AppsEvent.getDeviceList());
                             },
                             icon: const Icon(Icons.replay_outlined),
                           ),
@@ -147,7 +173,7 @@ class _AppsPageState extends State<AppsPage>
                                 context: context,
                                 builder: (context) => AddDeviceDialog(
                                   onAddDevice: (device) {
-                                    bloc.add(AppsEvent.addDevice(device));
+                                    _bloc.add(AppsEvent.addDevice(device));
                                   },
                                 ),
                               );
@@ -168,7 +194,7 @@ class _AppsPageState extends State<AppsPage>
                             children: devicies
                                 .map((device) => AppCard(
                                       '${device.name}\n${device.ipAddress}:${device.port}',
-                                      onTap: () => bloc.add(
+                                      onTap: () => _bloc.add(
                                         AppsEvent.selectDevice(device.name),
                                       ),
                                       onRemove: () {
@@ -187,7 +213,7 @@ class _AppsPageState extends State<AppsPage>
                                               TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  bloc.add(
+                                                  _bloc.add(
                                                     AppsEvent.removeDevice(
                                                       device.name,
                                                     ),
@@ -320,7 +346,7 @@ class _AppsPageState extends State<AppsPage>
                           ]),
                           Section(
                             title: 'Input Apps',
-                            children: mapAppIds.entries
+                            children: _mapAppIds.entries
                                 .map((e) => ActionButton(
                                       event: AppsEvent.launchApp(e.value),
                                       title: e.key,
@@ -345,56 +371,10 @@ class _AppsPageState extends State<AppsPage>
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      appIdController.text = 'com.webos.app.';
-                                      return AlertDialog(
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CallbackShortcuts(
-                                              bindings: {
-                                                const SingleActivator(
-                                                    LogicalKeyboardKey
-                                                        .enter): () {
-                                                  if (appIdController
-                                                      .text.isNotEmpty) {
-                                                    bloc.add(
-                                                      AppsEvent.launchApp(
-                                                          appIdController.text),
-                                                    );
-                                                  }
-                                                }
-                                              },
-                                              child: TextField(
-                                                autofocus: true,
-                                                controller: appIdController,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    bloc.add(
-                                                      AppsEvent.launchApp(
-                                                          appIdController.text),
-                                                    );
-                                                  },
-                                                  child: const Text('Launch'),
-                                                ),
-                                                const SizedBox(width: 10),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    bloc.add(
-                                                      AppsEvent.closeApp(
-                                                          appIdController.text),
-                                                    );
-                                                  },
-                                                  child: const Text('Close'),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                      _appIdController.text = 'com.webos.app.';
+                                      return LaunchByIdWidget(
+                                        appIdController: _appIdController,
+                                        bloc: _bloc,
                                       );
                                     },
                                   );
@@ -477,6 +457,107 @@ class _AppsPageState extends State<AppsPage>
                                   ),
                                 )
                                 .toList(),
+                          ),
+                          Section(
+                            title: 'TV Modes',
+                            children: TVMode.values
+                                .map(
+                                  (mode) => ActionButton(
+                                    event: AppsEvent.changeTVMode(mode),
+                                    title: mode.title,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                          Section(
+                            title: 'Voice control',
+                            children: [
+                              Section(title: 'Language', children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final result = await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return EditTextWidget(
+                                          text: _languageVoice,
+                                        );
+                                      },
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        _languageVoice = result;
+                                      });
+                                    }
+                                  },
+                                  child: Text(_languageVoice),
+                                ),
+                              ]),
+                              Section(
+                                title: 'Custom text',
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final result = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return EditTextWidget(
+                                            text: _customVoice,
+                                          );
+                                        },
+                                      );
+                                      if (result != null) {
+                                        setState(() {
+                                          _customVoice = result;
+                                        });
+                                      }
+                                    },
+                                    child: Text(_customVoice),
+                                  ),
+                                  ActionButton(
+                                    event: AppsEvent.voiceControl(
+                                      _customVoice,
+                                      _languageVoice,
+                                    ),
+                                    title: 'Go',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Section(
+                            title: 'Move',
+                            children: List.generate(
+                              _move.length,
+                              (index) {
+                                final value = _move[index];
+                                return ActionButton(
+                                  event: AppsEvent.voiceControl(
+                                    'move $value',
+                                    _languageVoice,
+                                  ),
+                                  title: value.toUpperCase(),
+                                );
+                              },
+                            ),
+                          ),
+                          Section(
+                            title: 'Scroll',
+                            children: List.generate(
+                              _scroll.length,
+                              (index) {
+                                final value = _scroll[index];
+                                return ActionButton(
+                                  event: AppsEvent.voiceControl(
+                                    'Scroll $value',
+                                    _languageVoice,
+                                  ),
+                                  title: value.toUpperCase(),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
                           ),
                         ],
                       ),

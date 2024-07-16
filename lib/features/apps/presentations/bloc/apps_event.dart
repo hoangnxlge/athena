@@ -51,4 +51,6 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.promotionOff() = _PromotionOff;
   const factory AppsEvent.recommendOn() = _RecommendOn;
   const factory AppsEvent.recommendOff() = _RecommendOff;
+  const factory AppsEvent.voiceControl(String text, String language) =
+      _VoiceControl;
 }

@@ -48,3 +48,5 @@ app.*.map.json
 *.freezed.dart
 *.mocks.dart
 pubspec.lock
+/windows/
+/linux/

@@ -91,6 +91,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_RecommendOff>(_offRecommend);
     on<_PromotionOn>(_onPromotion);
     on<_PromotionOff>(_offPromotion);
+    on<_VoiceControl>(_voiceControl);
   }
 
   Future<void> safeCall(AsyncCallback function,
@@ -213,16 +214,6 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
       _ReloadHomeApp event, Emitter<AppsState> emit) async {
     await safeCall(() async {
       await sendShellCommand('kill \$(pgrep flutter-client)');
-    });
-  }
-
-  Future<void> _onOpenNewSocketApp(
-      _OpenNewSocketApp event, Emitter<AppsState> emit) async {
-    await safeCall(() async {
-      await callLunaApi(
-        'luna://com.webos.service.applicationmanager/launch',
-        param: '{"id":"com.app.ls2bridge"}',
-      );
     });
   }
 
@@ -491,6 +482,16 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
       await callLunaApi(
         'luna://com.webos.settingsservice/setSystemSettings',
         param: '{"category":"general", "settings":{"homePromotion":"off"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _voiceControl(
+      _VoiceControl event, Emitter<AppsState> emit) async {
+    await safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.service.voiceconductor/recognizeIntentByText',
+        param: '{"text":"${event.text}", "runVoiceUi":true, "language":"${event.language}"}',
       );
     });
   }
