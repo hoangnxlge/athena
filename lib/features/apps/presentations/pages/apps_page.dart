@@ -391,6 +391,7 @@ class _AppsPageState extends State<AppsPage>
                           const Section(
                             title: 'Utils',
                             children: [
+                              ActionButton(event: AppsEvent.rotateScreen()),
                               ActionButton(
                                 event: AppsEvent.acceptUserAgrements(),
                               ),

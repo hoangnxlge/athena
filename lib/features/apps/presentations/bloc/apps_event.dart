@@ -53,4 +53,5 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.recommendOff() = _RecommendOff;
   const factory AppsEvent.voiceControl(String text, String language) =
       _VoiceControl;
+  const factory AppsEvent.rotateScreen() = _RotateScreen;
 }

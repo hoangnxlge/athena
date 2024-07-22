@@ -92,6 +92,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_PromotionOn>(_onPromotion);
     on<_PromotionOff>(_offPromotion);
     on<_VoiceControl>(_voiceControl);
+    on<_RotateScreen>(_onRotateScreen);
   }
 
   Future<void> safeCall(AsyncCallback function,
@@ -213,7 +214,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
   Future<void> _onReloadHomeApp(
       _ReloadHomeApp event, Emitter<AppsState> emit) async {
     await safeCall(() async {
-      await sendShellCommand('kill \$(pgrep flutter-client)');
+      await sendShellCommand('pkill flutter-client');
     });
   }
 
@@ -491,7 +492,31 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     await safeCall(() async {
       await callLunaApi(
         'luna://com.webos.service.voiceconductor/recognizeIntentByText',
-        param: '{"text":"${event.text}", "runVoiceUi":true, "language":"${event.language}"}',
+        param:
+            '{"text":"${event.text}", "runVoiceUi":true, "language":"${event.language}"}',
+      );
+    });
+  }
+
+  Future<FutureOr<void>> _onRotateScreen(
+      _RotateScreen event, Emitter<AppsState> emit) async {
+    // luna-send -n 1 -f luna://com.webos.settingsservice/setSystemSettings '{"category":"option" , "settings":{"screenRotation":"90"}}';
+    //  luna-send -n 1 -f luna://com.webos.settingsservice/getSystemSettings '{"category":"option", "key": "sc reenRotation"}'
+    await safeCall(() async {
+      final rotationSetting = (await callLunaApi(
+        'luna://com.webos.settingsservice/getSystemSettings',
+        param: '{"category":"option" , "key":"screenRotation"}',
+      ))
+          .outputMap;
+
+      final String rotationStatus =
+          rotationSetting['settings']?['screenRotation'] ?? 'off';
+
+      add(const _ReloadHomeApp());
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param:
+            '{"category":"option" , "settings":{"screenRotation":"${rotationStatus == 'off' ? '90' : 'off'}"}}',
       );
     });
   }
