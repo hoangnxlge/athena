@@ -460,17 +460,6 @@ class _AppsPageState extends State<AppsPage>
                                 .toList(),
                           ),
                           Section(
-                            title: 'TV Modes',
-                            children: TVMode.values
-                                .map(
-                                  (mode) => ActionButton(
-                                    event: AppsEvent.changeTVMode(mode),
-                                    title: mode.title,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          Section(
                             title: 'Voice control',
                             children: [
                               Section(title: 'Language', children: [

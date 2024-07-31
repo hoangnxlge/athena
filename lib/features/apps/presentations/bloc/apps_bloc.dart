@@ -51,7 +51,8 @@ enum CountryData {
 
 enum TVMode {
   store,
-  home;
+  home,
+  screensaver;
 
   String get title => name.toTitle();
 }
@@ -371,11 +372,18 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
   Future<void> _onChangeTVMode(
       _ChangeTVMode event, Emitter<AppsState> emit) async {
     await safeCall(() async {
-      await callLunaApi(
-        'luna://com.webos.settingsservice/setSystemSettings',
-        param:
-            '{"settings":{"storeMode":"${event.mode.name}"} ,"category":"option"}',
-      );
+      if (event.mode == TVMode.screensaver) {
+        await callLunaApi(
+          'luna://com.webos.service.nop/notifyExpireTimer',
+          param: '{"type":"[TIMER]ScreenSaver:180", "status":"expired"}',
+        );
+      } else {
+        await callLunaApi(
+          'luna://com.webos.settingsservice/setSystemSettings',
+          param:
+              '{"settings":{"storeMode":"${event.mode.name}"} ,"category":"option"}',
+        );
+      }
     });
   }
 
