@@ -501,7 +501,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
   Future<FutureOr<void>> _onRotateScreen(
       _RotateScreen event, Emitter<AppsState> emit) async {
     // luna-send -n 1 -f luna://com.webos.settingsservice/setSystemSettings '{"category":"option" , "settings":{"screenRotation":"90"}}';
-    //  luna-send -n 1 -f luna://com.webos.settingsservice/getSystemSettings '{"category":"option", "key": "sc reenRotation"}'
+    //  luna-send -n 1 -f luna://com.webos.settingsservice/getSystemSettings '{"category":"option", "key": "screenRotation"}'
     await safeCall(() async {
       final rotationSetting = (await callLunaApi(
         'luna://com.webos.settingsservice/getSystemSettings',
