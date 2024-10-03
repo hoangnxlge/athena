@@ -31,6 +31,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/windows/
+/linux/
 
 # Symbolication related
 app.*.symbols
@@ -48,8 +50,7 @@ app.*.map.json
 *.freezed.dart
 *.mocks.dart
 pubspec.lock
-/windows/
-/linux/
+
 
 # FVM Version Cache
 .fvm/

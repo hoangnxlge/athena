@@ -344,6 +344,20 @@ class _AppsPageState extends State<AppsPage>
                               title: 'Turn off Recommendation',
                             ),
                           ]),
+                          const Section(title: 'Power On Screen', children: [
+                            ActionButton(
+                              event: AppsEvent.powerOnRecentInput(),
+                              title: 'Recent input',
+                            ),
+                            ActionButton(
+                              event: AppsEvent.powerOnHomeApp(),
+                              title: 'Home App',
+                            ),
+                            ActionButton(
+                              event: AppsEvent.changeServerQA2(),
+                              title: 'QA2',
+                            ),
+                          ]),
                           Section(
                             title: 'Input Apps',
                             children: _mapAppIds.entries
@@ -444,17 +458,6 @@ class _AppsPageState extends State<AppsPage>
                                   (e) => ActionButton(
                                     event: AppsEvent.changeServiceCountry(e),
                                     title: e.countryName,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          Section(
-                            title: 'TV Modes',
-                            children: TVMode.values
-                                .map(
-                                  (mode) => ActionButton(
-                                    event: AppsEvent.changeTVMode(mode),
-                                    title: mode.title,
                                   ),
                                 )
                                 .toList(),
@@ -631,6 +634,14 @@ class _RemoteEmulator extends StatelessWidget {
               onPressed: () =>
                   bloc.add(const AppsEvent.sendKey(RemoteKey.menu)),
               icon: const Icon(Icons.settings),
+            ),
+            IconButton(
+              onPressed: () => bloc.add(const AppsEvent.rebootDevice()),
+              icon: const Icon(Icons.power_settings_new),
+            ),
+            IconButton(
+              onPressed: () => bloc.add(const AppsEvent.reloadHomeApp()),
+              icon: const Icon(Icons.replay_outlined),
             ),
           ],
         ),
