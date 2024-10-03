@@ -54,4 +54,7 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.voiceControl(String text, String language) =
       _VoiceControl;
   const factory AppsEvent.rotateScreen() = _RotateScreen;
+  const factory AppsEvent.powerOnRecentInput() = _PowerOnRecentInput;
+  const factory AppsEvent.powerOnHomeApp() = _PowerOnHomeApp;
+  const factory AppsEvent.changeServerQA2() = _ChangeServerQA2;
 }

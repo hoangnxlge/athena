@@ -94,6 +94,9 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_PromotionOff>(_offPromotion);
     on<_VoiceControl>(_voiceControl);
     on<_RotateScreen>(_onRotateScreen);
+    on<_PowerOnRecentInput>(_onPowerOnRecentInput);
+    on<_PowerOnHomeApp>(_onPowerOnHomeApp);
+    on<_ChangeServerQA2>(_onChangeServerQA2);
   }
 
   Future<void> safeCall(AsyncCallback function,
@@ -525,6 +528,44 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
         'luna://com.webos.settingsservice/setSystemSettings',
         param:
             '{"category":"option" , "settings":{"screenRotation":"${rotationStatus == 'off' ? '90' : 'off'}"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _onChangeServerQA2(
+      _ChangeServerQA2 event, Emitter<AppsState> emit) {
+    safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.service.sdx/setPublishFlag',
+        param: '{"flag":false}',
+      );
+      await callLunaApi(
+        'luna://com.webos.service.sdx/setAppPublishFlag',
+        param: '{"flag":false}',
+      );
+      await callLunaApi(
+        'luna://com.webos.service.sdx/setServer',
+        param: '{"serverIndex" : "QA2"}',
+      );
+    });
+  }
+
+  FutureOr<void> _onPowerOnHomeApp(
+      _PowerOnHomeApp event, Emitter<AppsState> emit) {
+    safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param: '{"category":"general", "settings":{"homeAutoLaunch":"on"}}',
+      );
+    });
+  }
+
+  FutureOr<void> _onPowerOnRecentInput(
+      _PowerOnRecentInput event, Emitter<AppsState> emit) {
+    safeCall(() async {
+      await callLunaApi(
+        'luna://com.webos.settingsservice/setSystemSettings',
+        param: '{"category":"general", "settings":{"homeAutoLaunch":"off"}}',
       );
     });
   }
