@@ -140,6 +140,11 @@ class _AppsPageState extends State<AppsPage>
     ),
   );
 
+  bool _enabledPromotion = false;
+  bool _enabledRecommend = false;
+  bool _enabledNetWork = false;
+  bool _enabledAudioGuidance = false;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -152,7 +157,7 @@ class _AppsPageState extends State<AppsPage>
           child: Row(
             children: [
               SizedBox(
-                width: 150,
+                width: 180,
                 child: ListView(
                   children: [
                     ListTile(
@@ -226,7 +231,6 @@ class _AppsPageState extends State<AppsPage>
                                         );
                                       },
                                       isSelected: device.isSelected,
-                                      width: 150,
                                     ))
                                 .toList(),
                           ),
@@ -326,22 +330,30 @@ class _AppsPageState extends State<AppsPage>
                     Expanded(
                       child: ListView(
                         children: [
-                          const Section(title: 'Ads', children: [
+                          Section(title: 'Ads', children: [
                             ActionButton(
-                              event: AppsEvent.promotionOn(),
-                              title: 'Turn on Promotion',
+                              event: _enabledPromotion
+                                  ? const AppsEvent.promotionOff()
+                                  : const AppsEvent.promotionOn(),
+                              title: 'Promotion',
+                              callback: () {
+                                setState(() {
+                                  _enabledPromotion = !_enabledPromotion;
+                                });
+                              },
+                              enable: _enabledPromotion,
                             ),
                             ActionButton(
-                              event: AppsEvent.promotionOff(),
-                              title: 'Turn off Promotion',
-                            ),
-                            ActionButton(
-                              event: AppsEvent.recommendOn(),
-                              title: 'Turn on Recommendation',
-                            ),
-                            ActionButton(
-                              event: AppsEvent.recommendOff(),
-                              title: 'Turn off Recommendation',
+                              event: _enabledRecommend
+                                  ? const AppsEvent.recommendOff()
+                                  : const AppsEvent.recommendOn(),
+                              title: 'Recommendation',
+                              enable: _enabledRecommend,
+                              callback: () {
+                                setState(() {
+                                  _enabledRecommend = !_enabledRecommend;
+                                });
+                              },
                             ),
                           ]),
                           const Section(title: 'Power On Screen', children: [
@@ -402,38 +414,50 @@ class _AppsPageState extends State<AppsPage>
                                   event: AppsEvent.reloadHomeApp()),
                             ],
                           ),
-                          const Section(
+                          Section(
                             title: 'Utils',
                             children: [
-                              ActionButton(event: AppsEvent.rotateScreen()),
-                              ActionButton(
-                                event: AppsEvent.acceptUserAgrements(),
-                              ),
-                              ActionButton(event: AppsEvent.factoryReset()),
-                              ActionButton(event: AppsEvent.activateDevMode()),
-                              ActionButton(event: AppsEvent.rebootDevice()),
-                              ActionButton(
+                              const ActionButton(
+                                  event: AppsEvent.rotateScreen()),
+                              const ActionButton(
+                                  event: AppsEvent.acceptUserAgrements()),
+                              const ActionButton(
+                                  event: AppsEvent.factoryReset()),
+                              const ActionButton(
+                                  event: AppsEvent.activateDevMode()),
+                              const ActionButton(
+                                  event: AppsEvent.rebootDevice()),
+                              const ActionButton(
                                 event: AppsEvent.getForegroundAppName(),
                               ),
-                              ActionButton(
+                              const ActionButton(
                                   event: AppsEvent.turnOnScreenSaver()),
                               ActionButton(
-                                title: 'Network on',
-                                event: AppsEvent.changeDNS('192.168.0.1'),
+                                title: 'Network',
+                                event: _enabledNetWork
+                                    ? const AppsEvent.changeDNS('127.0.0.0')
+                                    : const AppsEvent.changeDNS('192.168.0.1'),
+                                enable: _enabledNetWork,
+                                callback: () {
+                                  setState(() {
+                                    _enabledNetWork = !_enabledNetWork;
+                                  });
+                                },
                               ),
-                              ActionButton(
-                                title: 'Network off',
-                                event: AppsEvent.changeDNS('127.0.0.0'),
-                              ),
-                              ActionButton(
+                              const ActionButton(
                                   event: AppsEvent.getSoftwareVersion()),
                               ActionButton(
-                                event: AppsEvent.switchAudioGuidance(true),
-                                title: 'Audio guidance on',
-                              ),
-                              ActionButton(
-                                event: AppsEvent.switchAudioGuidance(false),
-                                title: 'Audio guidance off',
+                                event: _enabledAudioGuidance
+                                    ? const AppsEvent.switchAudioGuidance(false)
+                                    : const AppsEvent.switchAudioGuidance(true),
+                                title: 'Audio guidance',
+                                enable: _enabledAudioGuidance,
+                                callback: () {
+                                  setState(() {
+                                    _enabledAudioGuidance =
+                                        !_enabledAudioGuidance;
+                                  });
+                                },
                               ),
                             ],
                           ),

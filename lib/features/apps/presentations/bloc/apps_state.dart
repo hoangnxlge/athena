@@ -21,4 +21,6 @@ class AppsState with _$AppsState {
       _CaptureScreenSuccess;
   const factory AppsState.getSoftwareVersionSuccess(String version) =
       _GetSoftwareVersionSuccess;
+   const factory AppsState.getPromotionSuccess(bool enable) =
+      _GetPromotionSuccess;
 }
