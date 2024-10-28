@@ -8,9 +8,13 @@ class ActionButton extends StatelessWidget {
     super.key,
     this.title,
     required this.event,
+    this.enable = false,
+    this.callback,
   });
   final String? title;
   final AppsEvent event;
+  final bool enable;
+  final Function? callback;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,11 @@ class ActionButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         context.read<AppsBloc>().add(event);
+        callback?.call();
       },
+      style: ButtonStyle(
+          backgroundColor:
+              enable ? WidgetStateProperty.all(Colors.teal) : null),
       child: Text(label),
     );
   }

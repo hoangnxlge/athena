@@ -57,4 +57,5 @@ class AppsEvent with _$AppsEvent {
   const factory AppsEvent.powerOnRecentInput() = _PowerOnRecentInput;
   const factory AppsEvent.powerOnHomeApp() = _PowerOnHomeApp;
   const factory AppsEvent.changeServerQA2() = _ChangeServerQA2;
+  const factory AppsEvent.getPromotionStatus() = _GetPromotionStatus;
 }

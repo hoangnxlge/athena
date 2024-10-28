@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:athena/features/apps/data/models/custom_device.dart';
@@ -97,6 +98,7 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
     on<_PowerOnRecentInput>(_onPowerOnRecentInput);
     on<_PowerOnHomeApp>(_onPowerOnHomeApp);
     on<_ChangeServerQA2>(_onChangeServerQA2);
+    on<_GetPromotionStatus>(_onChangePromotionStatus);
   }
 
   Future<void> safeCall(AsyncCallback function,
@@ -568,5 +570,10 @@ class AppsBloc extends Bloc<AppsEvent, AppsState> with AppsBlocMixin {
         param: '{"category":"general", "settings":{"homeAutoLaunch":"off"}}',
       );
     });
+  }
+
+  FutureOr<void> _onChangePromotionStatus(
+      _GetPromotionStatus event, Emitter<AppsState> emit) {
+    emit(const _GetPromotionSuccess(true));
   }
 }
